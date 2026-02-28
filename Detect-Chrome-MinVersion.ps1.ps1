@@ -26,7 +26,29 @@ function Write-Log($Message){
     $Line | Out-File -FilePath $LogPath -Append
 }
 
-Write-Log "Test log entry"
+Write-Log "Script Starting"
+
+try {
+    $Entries = Get-ItemProperty -Path $UninstallPaths -ErrorAction Stop
+
+    $ChromeEntry = $Entries | Where-Object {
+            $_.DisplayName -like "*Google Chrome*"
+    }
+} Catch {
+    Write-Log "Unexpected Error: $($_.Exception.Message)"
+    Exit 1
+}
+
+if (-not $ChromeEntry) {
+    Write-Log "Google Chrome not installed"
+    exit 1
+}
+
+Write-Log "FOUND: $($ChromeEntry.DisplayName) | Publisher $($ChromeEntry.Publisher) | Version: $($ChromeEntry.DisplayVersion)"
+Write-Log "Installed version (raw): $($ChromeEntry.DisplayVersion)"
+
+
+
 
 
 
