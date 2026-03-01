@@ -44,8 +44,17 @@ if (-not $ChromeEntry) {
     exit 1
 }
 
-Write-Log "FOUND: $($ChromeEntry.DisplayName) | Publisher $($ChromeEntry.Publisher) | Version: $($ChromeEntry.DisplayVersion)"
+Write-Log "FOUND: $($ChromeEntry.DisplayName) | Publisher: $($ChromeEntry.Publisher) | Version: $($ChromeEntry.DisplayVersion)"
 Write-Log "Installed version (raw): $($ChromeEntry.DisplayVersion)"
+
+if ([version]$ChromeEntry.DisplayVersion -ge [version]$MinVersion) {
+    Write-Log "Compliant"
+    exit 0
+} 
+else {
+    Write-Log "Outdated"
+    exit 1
+}
 
 
 
